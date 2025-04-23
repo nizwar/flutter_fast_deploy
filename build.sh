@@ -13,7 +13,8 @@ build_number=$(echo "$old_version" | awk -F '+' '{print $2}')
 version=$(echo "$old_version" | awk -F '+' '{print $1}')
 
 # Get the git commit messages since yesterday midnight
-message=$(git log --pretty='format:(%h) %s' --since=yesterday.midnight)
+gitFormattedMessage=$(git log --pretty='format:(%h) %s' --since=yesterday.midnight)
+gitPrettyFormattedMessage=$(git log --pretty='format:• %s' --since=yesterday.midnight)
 
 # Get the current date and time in Asia/Jakarta timezone
 now=$(TZ="Asia/Jakarta" date +"%T %d-%m-%Y")
@@ -49,21 +50,21 @@ done
 echo "🚀 Current Build Version: $old_version 🚀" | tee -a "$log_file"
 echo ====================================================== | tee -a "$log_file"
 echo "Changelogs:" | tee -a "$log_file"
-echo -e "$message" | tee -a "$log_file"
+echo -e "$gitFormattedMessage" | tee -a "$log_file"
 
 # Prepare changelog entry
-log="[$old_version] $(id -un) - ($now)
+changelogs="[$old_version] $(id -un) - ($now)
 ======================================================
-$message
+$gitFormattedMessage
 "
 
 # Check if the current version already exists in changelogs.txt
 if ! grep -q "[$old_version]" changelogs.txt; then
     # Append changelog to changelogs.txt and write to dist_changelogs.txt
-    echo -e "$log" >> changelogs.txt
+    echo -e "$changelogs" >> changelogs.txt
 fi
-echo -e "$log" > dist_changelogs.txt
-echo -e "[MODE: $mode] $log" > dist_changelogs.txt
+echo -e "$changelogs" > dist_changelogs.txt
+echo -e "[MODE: $mode] $changelogs" > dist_changelogs.txt
 
 echo "======================================================" | tee -a "$log_file"
 echo "Build mode: $mode" | tee -a "$log_file"
@@ -115,10 +116,10 @@ if $ANDROID_BUILD; then
                     # Check if the changelogs directory exists in the current directory
                     if [ -d "$dir/changelogs" ]; then
                         # Create a new file in the changelogs folder with the build number
-                        echo -e "$log" > "$dir/changelogs/default.txt"
+                        echo -e "$gitPrettyFormattedMessage" > "$dir/changelogs/default.txt"
                     fi
                 done
-                fastlane run upload_to_play_store aab:"distribution/android/output/app-release.aab" package_name:"$ANDROID_PACKAGE_NAME" json_key:"distribution/fastlane.json" track:"internal" track_promote_to:"production" >> "$log_file" 2>&1 || echo "Error during Fastlane distribution" >> "$log_file"
+                fastlane run upload_to_play_store metadata_path:"distribution/android/metadata/" aab:"distribution/android/output/app-release.aab" package_name:"$ANDROID_PACKAGE_NAME" json_key:"distribution/fastlane.json" track:"internal" track_promote_to:"production" >> "$log_file" 2>&1 || echo "Error during Fastlane distribution" >> "$log_file"
             fi
         fi
     else
