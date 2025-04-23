@@ -59,7 +59,29 @@ Before you start, make sure you have the following tools installed:
 
 ## 🛠️ How to Use
 
-### 1. Set Up Your Environment  
+### 1. Download the `build.sh` Script  
+
+You can download the `build.sh` script directly from this repository and place it in your main Flutter project folder. Here's how:
+
+1. Download the `build.sh` file from the repository:  
+   [Download build.sh](https://raw.githubusercontent.com/nizwar/flutter_fast_deploy/main/build.sh)
+
+2. Place the `build.sh` file in the root of your Flutter project directory. Your directory structure should look like this:
+
+```
+your_project_directory
+  ├── lib
+  ├── pubspec.yaml
+  ├── build.sh
+```
+
+3. Make the script executable by running the following command in your terminal:
+
+```bash
+chmod +x build.sh
+```
+
+### 2. Set Up Your Environment  
 
 Create a `.distribution.env` file in the root directory with the following structure:
 
@@ -128,7 +150,7 @@ your_project_directory
 
 ---
 
-### 2. Run the Script  
+### 3. Run the Script  
 
 Run the script with your desired mode:
 

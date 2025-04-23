@@ -60,9 +60,10 @@ $gitFormattedMessage
 
 # Check if the current version already exists in changelogs.txt
 if ! grep -q "[$old_version]" changelogs.txt; then
-    # Append changelog to changelogs.txt and write to dist_changelogs.txt
+    # Append changelog to changelogs.txt if it doesn't already exist
     echo -e "$changelogs" >> changelogs.txt
 fi
+# Write changelog to dist_changelogs.txt
 echo -e "$changelogs" > dist_changelogs.txt
 echo -e "[MODE: $mode] $changelogs" > dist_changelogs.txt
 
